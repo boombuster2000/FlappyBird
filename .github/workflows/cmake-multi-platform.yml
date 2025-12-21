@@ -87,16 +87,16 @@ jobs:
         sudo apt-get update
         # Install all the libraries raylib needs for graphics, audio, input, etc.
         sudo apt-get install -y \
-          libasound2-dev \      # Audio support (ALSA)
-          libx11-dev \          # X11 window system
-          libxrandr-dev \       # Monitor resolution/refresh rate
-          libxi-dev \           # Input devices (mouse, keyboard)
-          libgl1-mesa-dev \     # OpenGL graphics
-          libglu1-mesa-dev \    # OpenGL utilities
-          libxcursor-dev \      # Mouse cursor support
-          libxinerama-dev \     # Multi-monitor support
-          libwayland-dev \      # Wayland display server (alternative to X11)
-          libxkbcommon-dev      # Keyboard handling
+          libasound2-dev \
+          libx11-dev \
+          libxrandr-dev \
+          libxi-dev \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev \
+          libxcursor-dev \
+          libxinerama-dev \
+          libwayland-dev \
+          libxkbcommon-dev
     
     # Step 3: Install dependencies for macOS
     - name: Install macOS dependencies
