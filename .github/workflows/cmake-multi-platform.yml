@@ -146,8 +146,8 @@ jobs:
       with:
         name: build-${{ matrix.os }}-${{ matrix.c_compiler }}
         path: |
-          ${{ steps.strings.outputs.build-output-dir }}/**/*.exe
-          ${{ steps.strings.outputs.build-output-dir }}/**/*.app
-          ${{ steps.strings.outputs.build-output-dir }}/FlappyBird
-          ${{ steps.strings.outputs.build-output-dir }}/Release/*.exe
+          ${{ steps.strings.outputs.build-output-dir }}/game/FlappyBird
+          ${{ steps.strings.outputs.build-output-dir }}/game/FlappyBird.exe
+          ${{ steps.strings.outputs.build-output-dir }}/game/**/*.app
+          ${{ steps.strings.outputs.build-output-dir }}/game/Release/FlappyBird.exe
         retention-days: 7
