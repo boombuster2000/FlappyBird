@@ -98,15 +98,7 @@ jobs:
           libwayland-dev \
           libxkbcommon-dev
     
-    # Step 3: Install dependencies for macOS
-    - name: Install macOS dependencies
-      if: matrix.os == 'macos-latest'
-      run: |
-        # Install CMake using Homebrew (macOS package manager)
-        # Most other dependencies come with macOS
-        brew install cmake
-    
-    # Step 4: Create a reusable variable for the build directory path
+    # Step 3: Create a reusable variable for the build directory path
     - name: Set reusable strings
       id: strings  # This ID lets us reference outputs from this step
       shell: bash  # Use bash even on Windows for consistency
@@ -115,7 +107,7 @@ jobs:
         # It points to where CMake will put the compiled files
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
     
-    # Step 5: Configure CMake (prepare for building)
+    # Step 4: Configure CMake (prepare for building)
     # This step doesn't compile yet, it just sets up the build system
     - name: Configure CMake
       run: >
@@ -125,11 +117,11 @@ jobs:
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}      # Release or Debug
         -S ${{ github.workspace }}                       # Where the source code is
     
-    # Step 6: Actually compile the code
+    # Step 5: Actually compile the code
     - name: Build
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
     
-    # Step 7: Run tests (if you have any defined in CMakeLists.txt)
+    # Step 6: Run tests (if you have any defined in CMakeLists.txt)
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       # ctest runs tests defined with add_test() in CMake
@@ -138,7 +130,7 @@ jobs:
       continue-on-error: true
       run: ctest --build-config ${{ matrix.build_type }} --output-on-failure
     
-    # Step 8: Save the compiled program so you can download it
+    # Step 7: Save the compiled program so you can download it
     # This uploads: Windows .exe files, macOS .app bundles, and Linux executables
     - name: Upload artifacts
       if: matrix.build_type == 'Release'
