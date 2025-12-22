@@ -5,16 +5,16 @@
 namespace engine::core
 {
 
-    class Application
-    {
-    public:
-        explicit Application(const AppSpec& appSpec);
-        ~Application();
+class Application
+{
+public:
+    explicit Application(const AppSpec& appSpec);
+    ~Application();
 
-        Application(const Application&) = delete;
-        Application& operator=(const Application&) = delete;
+    Application(const Application&) = delete;
+    Application& operator=(const Application&) = delete;
 
-        void Run();
-    };
+    void Run();
+};
 
 } // namespace engine::core
