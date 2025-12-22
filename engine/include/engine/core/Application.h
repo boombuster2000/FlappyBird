@@ -7,14 +7,14 @@ namespace engine::core
 
     class Application
     {
-        public:
+    public:
         explicit Application(const AppSpec& appSpec);
         ~Application();
 
         Application(const Application&) = delete;
         Application& operator=(const Application&) = delete;
 
-        static void Run();
+        void Run();
     };
 
 } // namespace engine::core

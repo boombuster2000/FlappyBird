@@ -9,7 +9,6 @@ class ServiceLocator
 public:
     static void SetApp(Application* app);
 
-
 private:
     inline static Application* s_app = nullptr;
 };
