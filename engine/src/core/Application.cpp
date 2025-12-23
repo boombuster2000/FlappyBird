@@ -31,4 +31,9 @@ void Application::Run()
 
 }
 
+AssetManager& Application::GetAssetManager()
+{
+    return m_assetManager;
+}
+
 } // namespace engine::core
