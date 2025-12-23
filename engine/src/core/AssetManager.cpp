@@ -53,11 +53,6 @@ bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path
     return true;
 }
 
-bool AssetManager::AddTexture(const std::string_view name, const std::string_view path)
-{
-    return AddTexture(name, std::filesystem::path(path));
-}
-
 void AssetManager::RemoveTexture(std::string_view name)
 {
     if (!m_textures.contains(name))

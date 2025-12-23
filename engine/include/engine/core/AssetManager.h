@@ -24,9 +24,6 @@ public:
     /// @warning If a texture with this name already exists, it will be replaced.
     bool AddTexture(std::string_view name, const std::filesystem::path& path);
 
-    /// @overload
-    bool AddTexture(std::string_view name, std::string_view path);
-
     /// @brief Unloads texture from memory.
     /// @param name The texture identifier
     /// @note Invalidates any existing pointers/references to this texture.
