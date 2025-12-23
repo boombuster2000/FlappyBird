@@ -2,8 +2,11 @@
 
 #include <string>
 #include <unordered_map>
+#include <filesystem>
 
 #include "raylib.h"
+
+#include  "engine/StringHash.h"
 
 namespace engine::core
 {
@@ -17,8 +20,12 @@ public:
     /// @brief Loads the texture into memory.
     /// @param name Identifier used to retrieve this texture later.
     /// @param path File path to the texture image.
+    /// @return true if the texture was successfully loaded; false otherwise.
     /// @warning If a texture with this name already exists, it will be replaced.
-    void AddTexture(std::string_view name, std::string_view path);
+    bool AddTexture(std::string_view name, const std::filesystem::path& path);
+
+    /// @overload
+    bool AddTexture(std::string_view name, std::string_view path);
 
     /// @brief Unloads texture from memory.
     /// @param name The texture identifier
@@ -26,7 +33,11 @@ public:
     ///       Does nothing if the texture is not found.
     void RemoveTexture(std::string_view name);
 
+
 private:
-    std::unordered_map<std::string, Texture2D> m_textures{};
+    static bool IsValidTextureExtension(const std::filesystem::path& path);
+
+private:
+    std::unordered_map<std::string, Texture2D, StringHash, std::equal_to<>> m_textures{};
 };
 } // namespace engine::core
