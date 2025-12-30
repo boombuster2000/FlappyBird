@@ -3,8 +3,6 @@
 #include <ranges>
 #include <unordered_set>
 
-// ReSharper disable once CppUnusedIncludeDirective
-#include "engine/Platform.h"
 #include "spdlog/spdlog.h"
 
 
