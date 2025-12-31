@@ -1,8 +1,6 @@
 #pragma once
 #include <exception>
 #include <string>
-#include <utility>
-#include <spdlog/spdlog.h>
 
 namespace engine::exceptions
 {
@@ -10,14 +8,13 @@ namespace engine::exceptions
 class EngineException : public std::exception
 {
 public:
-    EngineException(const std::string_view system, std::string message, const char* file = "", const int line = 0)
-        : m_message(std::move(message)), m_file(file), m_line(line)
+    explicit EngineException(const std::string_view system, const std::string_view message, const std::string_view file, const int line)
+        : m_message(message), m_file(file), m_line(line), m_system(system)
     {
-
         std::ostringstream messageStream;
-        messageStream << "[" << system <<" Error] " << m_message;
+        messageStream << "[" << system << " Error] " << m_message;
 
-        if (file && file[0] != '\0')
+        if (file.length() > 0 && file[0] != '\0')
             messageStream << " (File: " << file << ", Line: " << line << ")";
 
         m_message = messageStream.str();
@@ -28,10 +25,18 @@ public:
         return m_message.c_str();
     }
 
+    [[nodiscard]] const std::string& GetSystem() const
+    {
+        return m_system;
+    }
+
 protected:
     std::string m_message;
     std::string m_file;
     int m_line;
+
+private:
+    std::string m_system;
 };
 
 // Macro to make throwing exceptions easier with automatic file/line info

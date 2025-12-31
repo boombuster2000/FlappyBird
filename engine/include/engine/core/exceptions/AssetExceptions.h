@@ -7,9 +7,9 @@ namespace engine::exceptions
 class AssetNotFoundException : public EngineException
 {
 public:
-    AssetNotFoundException(std::string assetType, std::string assetName, const char* file, const int line)
-    : EngineException("AssetManager", std::move(std::format("{} '{}' not found.", assetType, assetName)), file, line),
-    m_type(std::move(assetType)), m_name(std::move(assetName))
+    explicit AssetNotFoundException(const std::string_view assetType, const std::string_view assetName, const std::string_view file, const int line)
+    : EngineException("AssetManager", std::format("{} '{}' not found.", assetType, assetName), file, line),
+    m_type(assetType), m_name(assetName)
     {
     }
 
@@ -22,21 +22,57 @@ private:
     std::string m_name;
 };
 
-class AssetFileNotFoundException : public EngineException
+class AssetFileException : public EngineException
 {
 public:
-    AssetFileNotFoundException(std::string assetType, std::string assetFilePath, const char* file, const int line)
-    : EngineException("AssetManager", std::move(std::format("{} '{}' not found.", assetType, assetFilePath)), file, line)
+    explicit AssetFileException(const std::string_view assetType, const std::string_view assetFilePath,
+                              const std::string_view message, const std::string_view file, const int line)
+    : EngineException("AssetManager", message, file, line),
+    m_type(assetType), m_filePath(assetFilePath)
     {
     }
 
-    [[nodiscard]] const std::string& GetType() const;
+    [[nodiscard]] const std::string& GetType() const
+    {
+        return m_type;
+    };
 
-    [[nodiscard]] const std::string& GetFilePath() const;
+    [[nodiscard]] const std::string& GetFilePath() const
+    {
+        return m_filePath;
+    };
 
 private:
     std::string m_type;
     std::string m_filePath;
+};
+
+class AssetFileNotFoundException : public AssetFileException
+{
+public:
+    explicit AssetFileNotFoundException(const std::string_view assetType, const std::string_view assetFilePath,
+                                      const std::string_view file, const int line)
+    : AssetFileException(assetType,
+        assetFilePath,
+        std::format("{} '{}' not found.", assetType, assetFilePath),
+        file,
+        line)
+    {
+    }
+};
+
+class AssetIsADirectoryException : public AssetFileException
+{
+public:
+    explicit AssetIsADirectoryException(const std::string_view assetType, const std::string_view assetFilePath,
+                                      const std::string_view file, const int line)
+    : AssetFileException(assetType,
+        assetFilePath,
+        std::format("{} '{}' not found.", assetType, assetFilePath),
+        file,
+        line)
+    {
+    }
 };
 
 // Macros for convenience
