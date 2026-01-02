@@ -54,21 +54,21 @@ public:
                                       const std::string_view file, const int line)
     : AssetFileException(assetType,
         assetFilePath,
-        std::format("{} '{}' not found.", assetType, assetFilePath),
+        std::format("Failed to find {} file '{}'.", assetType, assetFilePath),
         file,
         line)
     {
     }
 };
 
-class AssetIsADirectoryException : public AssetFileException
+class AssetPathIsADirectoryException : public AssetFileException
 {
 public:
-    explicit AssetIsADirectoryException(const std::string_view assetType, const std::string_view assetFilePath,
+    explicit AssetPathIsADirectoryException(const std::string_view assetType, const std::string_view assetFilePath,
                                       const std::string_view file, const int line)
     : AssetFileException(assetType,
         assetFilePath,
-        std::format("{} '{}' not found.", assetType, assetFilePath),
+        std::format("{} '{}' is a directory.", assetType, assetFilePath),
         file,
         line)
     {
@@ -76,7 +76,6 @@ public:
 };
 
 // Macros for convenience
-
 #define THROW_ASSET_NOT_FOUND(assetType, assetName) \
 throw engine::exceptions::AssetNotFoundException(assetType, assetName, __FILE__, __LINE__)
 
