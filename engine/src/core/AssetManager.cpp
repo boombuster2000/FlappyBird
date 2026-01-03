@@ -5,6 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
+#include "engine/core/exceptions/AssetExceptions.h"
 
 
 namespace engine::core
@@ -18,27 +19,18 @@ AssetManager::~AssetManager()
     m_textures.clear();
 }
 
-bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path& path)
+void AssetManager::AddTexture(std::string_view name, const std::filesystem::path& path)
 {
     const auto pathStr = path.string();
 
     if (!std::filesystem::exists(path))
-    {
-        spdlog::error("Cannot load texture '{}': file '{}' does not exist", name, pathStr);
-        return false;
-    }
+        THROW_ASSET_FILE_NOT_FOUND("texture", path.string());
 
     if (std::filesystem::is_directory(path))
-    {
-        spdlog::error("Cannot load texture '{}': path '{}' is a directory, not a file", name, pathStr);
-        return false;
-    }
+        THROW_ASSET_FILE_IS_A_DIRECTORY("texture", path.string());
 
     if (!IsValidTextureExtension(path))
-    {
-        spdlog::error("Cannot load texture '{}': unsupported file format '{}'", name, path.extension().string());
-        return false;
-    }
+        THROW_INVALID_ASSET_FILE_EXTENSION("texture", path.string());
 
     if (path.is_absolute())
         spdlog::warn("Absolute path used for texture '{}': {}", name, pathStr);
@@ -48,7 +40,6 @@ bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path
 
     m_textures[std::string(name)] = LoadTexture(pathStr.c_str());
 
-    return true;
 }
 
 void AssetManager::RemoveTexture(std::string_view name)
@@ -60,6 +51,14 @@ void AssetManager::RemoveTexture(std::string_view name)
     }
 
     m_textures.erase(std::string(name));
+}
+
+const Texture2D& AssetManager::GetTexture(const std::string& name) const
+{
+    if (!m_textures.contains(name))
+        THROW_ASSET_NOT_FOUND("texture", name);
+
+    return m_textures.at(name);
 }
 
 bool AssetManager::IsValidTextureExtension(const std::filesystem::path& path)

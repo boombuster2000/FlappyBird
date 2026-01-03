@@ -6,7 +6,7 @@
 
 #include "raylib.h"
 
-#include  "engine/StringHash.h"
+#include "engine/StringHash.h"
 
 namespace engine::core
 {
@@ -22,13 +22,15 @@ public:
     /// @param path File path to the texture image.
     /// @return true if the texture was successfully loaded; false otherwise.
     /// @warning If a texture with this name already exists, it will be replaced.
-    bool AddTexture(std::string_view name, const std::filesystem::path& path);
+    void AddTexture(std::string_view name, const std::filesystem::path& path);
 
     /// @brief Unloads texture from memory.
     /// @param name The texture identifier
     /// @note Invalidates any existing pointers/references to this texture.
     ///       Does nothing if the texture is not found.
     void RemoveTexture(std::string_view name);
+
+    const Texture2D& GetTexture(const std::string& name) const;
 
 
 private:
