@@ -14,7 +14,7 @@ public:
         std::ostringstream messageStream;
         messageStream << "[" << system << " Error] " << m_message;
 
-        if (file.length() > 0 && file[0] != '\0')
+        if (!file.empty() && file[0] != '\0')
             messageStream << " (File: " << file << ", Line: " << line << ")";
 
         m_message = messageStream.str();
