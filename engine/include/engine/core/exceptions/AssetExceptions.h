@@ -68,7 +68,7 @@ public:
                                       const std::string_view file, const int line)
     : AssetFileException(assetType,
         assetFilePath,
-        std::format("{} '{}' is a directory.", assetType, assetFilePath),
+        std::format("{} filepath '{}' is a directory.", assetType, assetFilePath),
         file,
         line)
     {
