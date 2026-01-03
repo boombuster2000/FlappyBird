@@ -75,6 +75,30 @@ public:
     }
 };
 
+class InvalidAssetFileExtension : public AssetFileException
+{
+public:
+    explicit InvalidAssetFileExtension(const std::string_view assetType, const std::string_view assetFilePath,
+                                      const std::string_view file, const int line)
+    : AssetFileException(assetType,
+        assetFilePath,
+        std::format("Unsupported {} file format '{}'.", assetType, std::filesystem::path(file).extension().string()),
+        file,
+        line)
+    {
+        const std::filesystem::path path = assetFilePath;
+        m_extension = path.extension().string();
+    }
+
+    [[nodiscard]] const std::string& GetExtension() const
+    {
+        return m_extension;
+    }
+
+private:
+    std::string m_extension;
+};
+
 // Macros for convenience
 #define THROW_ASSET_NOT_FOUND(assetType, assetName) \
 throw engine::exceptions::AssetNotFoundException(assetType, assetName, __FILE__, __LINE__)
@@ -82,4 +106,9 @@ throw engine::exceptions::AssetNotFoundException(assetType, assetName, __FILE__,
 #define THROW_ASSET_FILE_NOT_FOUND(assetType, assetFilePath) \
 throw engine::exceptions::AssetFileNotFoundException(assetType, assetFilePath, __FILE__, __LINE__)
 
+#define THROW_ASSET_FILE_IS_A_DIRECTORY(assetType, assetFilePath) \
+throw engine::exceptions::AssetPathIsADirectoryException(assetType, assetFilePath, __FILE__, __LINE__)
+
+#define THROW_INVALID_ASSET_FILE_EXTENSION(assetType, assetFilePath) \
+throw engine::exceptions::InvalidAssetFileExtension(assetType, assetFilePath, __FILE__, __LINE__)
 } // namespace engine::exceptions
