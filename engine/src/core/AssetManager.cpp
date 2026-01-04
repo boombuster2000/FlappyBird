@@ -15,7 +15,8 @@ AssetManager::~AssetManager()
 
     m_textures.clear();
 
-    UnloadTexture(m_fallbackTexture);
+    if (m_isInitialized)
+        UnloadTexture(m_fallbackTexture);
 }
 
 void AssetManager::Initialize()
