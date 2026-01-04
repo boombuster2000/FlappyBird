@@ -1,5 +1,9 @@
 include(FetchContent)
 
+# Downloads raylib
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(
         raylib
         GIT_REPOSITORY https://github.com/raysan5/raylib.git
@@ -7,6 +11,15 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(raylib)
+
+# Downloads spdlog
+set(SPDLOG_HEADER_ONLY ON CACHE BOOL "" FORCE)
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG        v1.16.0  # Use a specific version for reproducibility
+)
+FetchContent_MakeAvailable(spdlog)
 
 
 add_library(engine STATIC)
@@ -34,5 +47,14 @@ target_include_directories(engine
 )
 
 target_link_libraries(engine
-        PUBLIC raylib
+        PUBLIC
+            raylib
+            spdlog::spdlog_header_only
 )
+
+if(WIN32)
+    target_compile_options(engine PUBLIC
+            $<$<CXX_COMPILER_ID:MSVC>:/FI$<SHELL_PATH:${CMAKE_CURRENT_SOURCE_DIR}/include/engine/Platform.h>>
+            $<$<CXX_COMPILER_ID:GNU,Clang>:-include ${CMAKE_CURRENT_SOURCE_DIR}/include/engine/Platform.h>
+    )
+endif()
