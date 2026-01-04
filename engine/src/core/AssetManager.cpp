@@ -5,8 +5,6 @@
 
 #include "spdlog/spdlog.h"
 
-
-
 namespace engine::core
 {
 
@@ -18,33 +16,44 @@ AssetManager::~AssetManager()
     m_textures.clear();
 }
 
+void AssetManager::Initialize()
+{
+    if (m_isInitialized) return;
+
+    const Image img = GenImageChecked(64, 64, 8, 8, MAGENTA, BLACK);
+    m_fallbackTexture = LoadTextureFromImage(img);
+    UnloadImage(img);
+
+    m_isInitialized = true;
+}
+
 bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path& path)
 {
     const auto pathStr = path.string();
 
     if (!std::filesystem::exists(path))
     {
-        spdlog::error("Cannot load texture '{}': file '{}' does not exist", name, pathStr);
+        spdlog::error("[AssetManager] - Cannot load texture '{}': file '{}' does not exist", name, pathStr);
         return false;
     }
 
     if (std::filesystem::is_directory(path))
     {
-        spdlog::error("Cannot load texture '{}': path '{}' is a directory, not a file", name, pathStr);
+        spdlog::error("[AssetManager] - Cannot load texture '{}': path '{}' is a directory, not a file", name, pathStr);
         return false;
     }
 
     if (!IsValidTextureExtension(path))
     {
-        spdlog::error("Cannot load texture '{}': unsupported file format '{}'", name, path.extension().string());
+        spdlog::error("[AssetManager] - Cannot load texture '{}': unsupported file format '{}'", name, path.extension().string());
         return false;
     }
 
     if (path.is_absolute())
-        spdlog::warn("Absolute path used for texture '{}': {}", name, pathStr);
+        spdlog::warn("[AssetManager] - Absolute path used for texture '{}': {}", name, pathStr);
 
     if (m_textures.contains(name))
-        spdlog::warn("Texture '{}' already exists and will be replaced with '{}'", name, pathStr);
+        spdlog::warn("[AssetManager] - Texture '{}' already exists and will be replaced with '{}'", name, pathStr);
 
     m_textures[std::string(name)] = LoadTexture(pathStr.c_str());
 
@@ -53,13 +62,26 @@ bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path
 
 void AssetManager::RemoveTexture(std::string_view name)
 {
-    if (!m_textures.contains(name))
+    const auto it = m_textures.find(name);
+    if (it == m_textures.end())
     {
-        spdlog::warn("Tried to remove texture {} that does not exist.", name);
+        spdlog::warn("[AssetManager] - Tried to remove texture {} that does not exist.", name);
         return;
     }
 
-    m_textures.erase(std::string(name));
+    m_textures.erase(it);
+}
+
+const Texture2D& AssetManager::GetTexture(std::string_view name) const
+{
+
+    if (const auto it = m_textures.find(name); it != m_textures.end())
+    {
+        return it->second;
+    }
+
+    spdlog::error("[AssetManager] - Texture '{}' not found, using fallback", name);
+    return m_fallbackTexture;
 }
 
 bool AssetManager::IsValidTextureExtension(const std::filesystem::path& path)
