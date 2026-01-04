@@ -1,7 +1,5 @@
 #include "engine/core/ServiceLocator.h"
 
-#include <cassert>
-
 void engine::core::ServiceLocator::SetApp(Application* app)
 {
     s_app = app;
