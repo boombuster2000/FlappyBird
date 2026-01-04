@@ -14,6 +14,8 @@ AssetManager::~AssetManager()
         UnloadTexture(texture);
 
     m_textures.clear();
+
+    UnloadTexture(m_fallbackTexture);
 }
 
 void AssetManager::Initialize()
