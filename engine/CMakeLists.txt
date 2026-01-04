@@ -53,8 +53,8 @@ target_link_libraries(engine
 )
 
 if(WIN32)
-    target_compile_options(engine PUBLIC  # PUBLIC so it applies to FlappyBird too
-            $<$<CXX_COMPILER_ID:MSVC>:/FI"${CMAKE_CURRENT_SOURCE_DIR}/include/engine/Platform.h">
+    target_compile_options(engine PUBLIC
+            $<$<CXX_COMPILER_ID:MSVC>:/FI$<SHELL_PATH:${CMAKE_CURRENT_SOURCE_DIR}/include/engine/Platform.h>>
             $<$<CXX_COMPILER_ID:GNU,Clang>:-include ${CMAKE_CURRENT_SOURCE_DIR}/include/engine/Platform.h>
     )
 endif()
