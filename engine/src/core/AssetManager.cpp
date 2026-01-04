@@ -97,7 +97,7 @@ bool AssetManager::IsValidTextureExtension(const std::filesystem::path& path)
         ".png", ".bmp", ".tga", ".jpg", ".gif", ".qoi", ".psd", ".dds", ".hdr", ".ktx", ".astc", ".pkm", ".pvr"};
 
     std::string extension = path.extension().string();
-    std::ranges::transform(extension, extension.begin(), ::tolower);
+    std::ranges::transform(extension, extension.begin(), [](const unsigned char c) { return std::tolower(c); });
 
     return validExtensions.contains(extension);
 }
