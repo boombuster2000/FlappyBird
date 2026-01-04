@@ -8,14 +8,11 @@ namespace engine::exceptions
 class EngineException : public std::exception
 {
 public:
-    explicit EngineException(const std::string_view system, const std::string_view message, const std::string_view file, const int line)
-        : m_message(message), m_file(file), m_line(line), m_system(system)
+    explicit EngineException(const std::string_view system, const std::string_view message)
+        : m_message(message), m_system(system)
     {
         std::ostringstream messageStream;
-        messageStream << "[" << system << " Error] " << m_message;
-
-        if (!file.empty() && file[0] != '\0')
-            messageStream << " (File: " << file << ", Line: " << line << ")";
+        messageStream << "[" << system << " Error] - " << m_message;
 
         m_message = messageStream.str();
     }
@@ -32,14 +29,9 @@ public:
 
 protected:
     std::string m_message;
-    std::string m_file;
-    int m_line;
 
 private:
     std::string m_system;
 };
-
-// Macro to make throwing exceptions easier with automatic file/line info
-#define THROW_ENGINE_EXCEPTION(system, message) throw EngineException(system, message, __FILE__, __LINE__)
 
 } // namespace engine::core
