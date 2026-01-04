@@ -2,6 +2,9 @@
 #include <functional>
 #include <string_view>
 
+namespace engine
+{
+
 struct StringHash
 {
     using is_transparent = void;  // Enable heterogeneous lookup
@@ -21,3 +24,5 @@ struct StringEqual
         return lhs == rhs;
     }
 };
+
+} // namespace engine
