@@ -17,7 +17,7 @@ set(ASSETS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
 set(ASSETS_DST "$<TARGET_FILE_DIR:FlappyBird>/assets")
 
 add_custom_target(copy_assets ALL
-        COMMAND ${CMAKE_COMMAND} -E rm -rf "${ASSETS_DST}"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${ASSETS_DST}"
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${ASSETS_DIR}" "${ASSETS_DST}"
         COMMENT "Copying assets"
 )
