@@ -56,7 +56,10 @@ bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path
         spdlog::warn("[AssetManager] - Absolute path used for texture '{}': {}", name, pathStr);
 
     if (m_textures.contains(name))
+    {
         spdlog::warn("[AssetManager] - Texture '{}' already exists and will be replaced with '{}'", name, pathStr);
+        UnloadTexture(m_textures.at(std::string(name)));
+    }
 
     m_textures[std::string(name)] = LoadTexture(pathStr.c_str());
 
