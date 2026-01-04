@@ -63,7 +63,16 @@ bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path
         UnloadTexture(m_textures.at(std::string(name)));
     }
 
-    m_textures[std::string(name)] = LoadTexture(pathStr.c_str());
+    const Texture2D loadedTexture = LoadTexture(pathStr.c_str());
+
+    if (loadedTexture.id == 0) // Corrupted textures have ids of 0.
+    {
+        spdlog::error("[AssetManager] - Failed to load texture '{}' from '{}', possibly corrupted.", name, pathStr);
+        UnloadTexture(loadedTexture);
+        return false;
+    }
+
+    m_textures[std::string(name)] = loadedTexture;
 
     return true;
 }
