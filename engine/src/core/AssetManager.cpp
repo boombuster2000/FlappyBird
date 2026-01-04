@@ -32,6 +32,8 @@ void AssetManager::Initialize()
 
 bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path& path)
 {
+    assert(m_isInitialized);
+
     const auto pathStr = path.string();
 
     if (!std::filesystem::exists(path))
@@ -68,6 +70,7 @@ bool AssetManager::AddTexture(std::string_view name, const std::filesystem::path
 
 void AssetManager::RemoveTexture(std::string_view name)
 {
+    assert(m_isInitialized);
     const auto it = m_textures.find(name);
     if (it == m_textures.end())
     {
@@ -81,6 +84,7 @@ void AssetManager::RemoveTexture(std::string_view name)
 
 const Texture2D& AssetManager::GetTexture(std::string_view name) const
 {
+    assert(m_isInitialized);
 
     if (const auto it = m_textures.find(name); it != m_textures.end())
     {
@@ -105,4 +109,5 @@ bool AssetManager::IsInitialized() const
 {
     return m_isInitialized;
 }
+
 } // namespace engine::core
