@@ -7,7 +7,7 @@ namespace engine::core
 Application::Application(const AppSpec& appSpec)
 {
     InitWindow(appSpec.width, appSpec.height, appSpec.windowTitle.c_str());
-
+    m_assetManager.Initialize();
 }
 
 Application::~Application()
