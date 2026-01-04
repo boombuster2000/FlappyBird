@@ -35,6 +35,11 @@ public:
     AssetManager() = default;
     ~AssetManager();
 
+    AssetManager(const AssetManager&) = delete;
+    AssetManager& operator=(const AssetManager&) = delete;
+    AssetManager(AssetManager&&) = delete;
+    AssetManager& operator=(AssetManager&&) = delete;
+
     /// @brief Initializes the asset manager and creates the default fallback texture
     ///
     /// This function sets up the asset management system and generates a magenta/black
