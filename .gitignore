@@ -1,4 +1,4 @@
-/.idea
-/_deps
+/.idea/
+/_deps/
 /.design-files/
-/build
+/build/
