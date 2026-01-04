@@ -7,8 +7,8 @@ namespace engine::exceptions
 class AssetNotFoundException : public EngineException
 {
 public:
-    explicit AssetNotFoundException(const std::string_view assetType, const std::string_view assetName, const std::string_view file, const int line)
-    : EngineException("AssetManager", std::format("{} '{}' not found.", assetType, assetName), file, line),
+    explicit AssetNotFoundException(const std::string_view assetType, const std::string_view assetName)
+    : EngineException("AssetManager", std::format("{} '{}' not found.", assetType, assetName)),
     m_type(assetType), m_name(assetName)
     {
     }
@@ -26,8 +26,8 @@ class AssetFileException : public EngineException
 {
 public:
     explicit AssetFileException(const std::string_view assetType, const std::string_view assetFilePath,
-                              const std::string_view message, const std::string_view file, const int line)
-    : EngineException("AssetManager", message, file, line),
+                              const std::string_view message)
+    : EngineException("AssetManager", message),
     m_type(assetType), m_filePath(assetFilePath)
     {
     }
@@ -50,13 +50,10 @@ private:
 class AssetFileNotFoundException : public AssetFileException
 {
 public:
-    explicit AssetFileNotFoundException(const std::string_view assetType, const std::string_view assetFilePath,
-                                      const std::string_view file, const int line)
+    explicit AssetFileNotFoundException(const std::string_view assetType, const std::string_view assetFilePath)
     : AssetFileException(assetType,
         assetFilePath,
-        std::format("Failed to find {} file '{}'.", assetType, assetFilePath),
-        file,
-        line)
+        std::format("Failed to find {} file '{}'.", assetType, assetFilePath))
     {
     }
 };
@@ -64,13 +61,10 @@ public:
 class AssetPathIsADirectoryException : public AssetFileException
 {
 public:
-    explicit AssetPathIsADirectoryException(const std::string_view assetType, const std::string_view assetFilePath,
-                                      const std::string_view file, const int line)
+    explicit AssetPathIsADirectoryException(const std::string_view assetType, const std::string_view assetFilePath)
     : AssetFileException(assetType,
         assetFilePath,
-        std::format("{} filepath '{}' is a directory.", assetType, assetFilePath),
-        file,
-        line)
+        std::format("{} filepath '{}' is a directory.", assetType, assetFilePath))
     {
     }
 };
@@ -78,13 +72,10 @@ public:
 class InvalidAssetFileExtension : public AssetFileException
 {
 public:
-    explicit InvalidAssetFileExtension(const std::string_view assetType, const std::string_view assetFilePath,
-                                      const std::string_view file, const int line)
+    explicit InvalidAssetFileExtension(const std::string_view assetType, const std::string_view assetFilePath)
     : AssetFileException(assetType,
         assetFilePath,
-        std::format("Unsupported {} file format '{}'.", assetType, std::filesystem::path(file).extension().string()),
-        file,
-        line)
+        std::format("Unsupported {} file format '{}'.", assetType, std::filesystem::path(assetFilePath).extension().string()))
     {
         const std::filesystem::path path = assetFilePath;
         m_extension = path.extension().string();
@@ -98,17 +89,4 @@ public:
 private:
     std::string m_extension;
 };
-
-// Macros for convenience
-#define THROW_ASSET_NOT_FOUND(assetType, assetName) \
-throw engine::exceptions::AssetNotFoundException(assetType, assetName, __FILE__, __LINE__)
-
-#define THROW_ASSET_FILE_NOT_FOUND(assetType, assetFilePath) \
-throw engine::exceptions::AssetFileNotFoundException(assetType, assetFilePath, __FILE__, __LINE__)
-
-#define THROW_ASSET_FILE_IS_A_DIRECTORY(assetType, assetFilePath) \
-throw engine::exceptions::AssetPathIsADirectoryException(assetType, assetFilePath, __FILE__, __LINE__)
-
-#define THROW_INVALID_ASSET_FILE_EXTENSION(assetType, assetFilePath) \
-throw engine::exceptions::InvalidAssetFileExtension(assetType, assetFilePath, __FILE__, __LINE__)
 } // namespace engine::exceptions
