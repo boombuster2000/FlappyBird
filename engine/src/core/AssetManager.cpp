@@ -94,4 +94,8 @@ bool AssetManager::IsValidTextureExtension(const std::filesystem::path& path)
 
     return validExtensions.contains(extension);
 }
+bool AssetManager::IsInitialized() const
+{
+    return m_isInitialized;
+}
 } // namespace engine::core
