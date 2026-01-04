@@ -17,6 +17,16 @@ public:
     AssetManager() = default;
     ~AssetManager();
 
+    /// @brief Initialises the asset manager and creates the default fallback texture
+    ///
+    /// This function sets up the asset management system and generates a magenta/black
+    /// checkerboard texture used as a placeholder when requested assets fail to load.
+    ///
+    /// @note Must be called after InitWindow() and before any asset loading operations.
+    /// @note The fallback texture is automatically used when GetTexture() fails.
+    ///
+    /// @warning Calling this function before window initialisation will cause errors
+    ///          as texture creation requires an active OpenGL context.
     void Initialize();
 
     /// @brief Loads the texture into memory.
@@ -32,6 +42,16 @@ public:
     ///       Does nothing if the texture is not found.
     void RemoveTexture(std::string_view name);
 
+    /// @brief Retrieves a texture by its name
+    ///
+    /// @param name The identifier used when the texture was loaded.
+    /// @return A const reference to the texture, or the fallback texture if not found.
+    ///
+    /// @note If the texture name doesn't exist, returns the magenta/black checkerboard fallback
+    ///       texture instead of crashing. Check logs for missing texture warnings.
+    /// @note The returned reference remains valid until the asset manager is destroyed.
+    ///
+    /// @see LoadTexture() for registering textures with names
     const Texture2D& GetTexture(std::string_view name) const;
 
 
