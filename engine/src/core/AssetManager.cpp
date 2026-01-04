@@ -24,13 +24,13 @@ void AssetManager::AddTexture(std::string_view name, const std::filesystem::path
     const auto pathStr = path.string();
 
     if (!std::filesystem::exists(path))
-        THROW_ASSET_FILE_NOT_FOUND("texture", path.string());
+        throw exceptions::AssetFileNotFoundException("texture", path.string());
 
     if (std::filesystem::is_directory(path))
-        THROW_ASSET_FILE_IS_A_DIRECTORY("texture", path.string());
+        throw exceptions::AssetPathIsADirectoryException("texture", path.string());
 
     if (!IsValidTextureExtension(path))
-        THROW_INVALID_ASSET_FILE_EXTENSION("texture", path.string());
+        throw exceptions::InvalidAssetFileExtension("texture", path.string());
 
     if (path.is_absolute())
         spdlog::warn("Absolute path used for texture '{}': {}", name, pathStr);
@@ -56,7 +56,7 @@ void AssetManager::RemoveTexture(std::string_view name)
 const Texture2D& AssetManager::GetTexture(const std::string& name) const
 {
     if (!m_textures.contains(name))
-        THROW_ASSET_NOT_FOUND("texture", name);
+       throw exceptions::AssetNotFoundException("texture", name);
 
     return m_textures.at(name);
 }
