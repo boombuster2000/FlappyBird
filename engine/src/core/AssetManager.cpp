@@ -75,6 +75,7 @@ void AssetManager::RemoveTexture(std::string_view name)
         return;
     }
 
+    UnloadTexture(it->second);
     m_textures.erase(it);
 }
 
