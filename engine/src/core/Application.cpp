@@ -15,7 +15,7 @@ Application::~Application()
     CloseWindow();
 }
 
-void Application::Run()
+void Application::Run() const
 {
     // Main game loop
     while (!WindowShouldClose())
@@ -24,11 +24,14 @@ void Application::Run()
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        for (const auto& layer : m_layers)
+        {
+            layer->OnUpdate();
+            layer->OnRender();
+        }
 
         EndDrawing();
     }
-
 }
 
 AssetManager& Application::GetAssetManager()
