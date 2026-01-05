@@ -26,8 +26,11 @@ void Application::Run() const
 
         for (const auto& layer : m_layers)
         {
-            layer->OnUpdate();
-            layer->OnRender();
+            if (layer->GetState() == LayerState::ACTIVE)
+                layer->OnUpdate();
+
+            if (layer->GetVisibility() == LayerVisibility::VISIBLE)
+                layer->OnRender();
         }
 
         EndDrawing();
