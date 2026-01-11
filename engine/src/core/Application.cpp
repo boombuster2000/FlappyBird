@@ -15,11 +15,12 @@ Application::~Application()
     CloseWindow();
 }
 
-void Application::Run() const
+void Application::Run()
 {
     // Main game loop
     while (!WindowShouldClose())
     {
+        ProcessLayerActions();
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -40,6 +41,14 @@ void Application::Run() const
 AssetManager& Application::GetAssetManager()
 {
     return m_assetManager;
+}
+
+void Application::ProcessLayerActions()
+{
+    for (const auto& factory : m_queuedLayerActions)
+        factory();
+
+    m_queuedLayerActions.clear();
 }
 
 } // namespace engine::core
