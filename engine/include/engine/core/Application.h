@@ -24,20 +24,33 @@ public:
 
     void ProcessLayerActions();
 
-    template <std::derived_from<Layer> T, typename... Args>
-    void QueuePushLayer(Args&&... args)
+    template <std::derived_from<Layer> LayerToPush, typename... Args>
+    void QueueLayerPush(Args&&... args)
     {
-        auto unpackedArgs = std::make_tuple(std::forward<Args>(args)...);
-
-        auto factory = [this, unpackedArgs = std::move(unpackedArgs)]() mutable {
-            std::apply(
-                [this]<typename... UnpackedArgs>(UnpackedArgs&&... elements) {
-                    m_layers.emplace_back(std::make_unique<T>(std::forward<UnpackedArgs>(elements)...));
-                },
-                std::move(unpackedArgs));
+        auto factory = [this, ... capturedArgs = std::forward<Args>(args)]() mutable {
+            m_layers.emplace_back(std::make_unique<LayerToPush>(std::forward<decltype(capturedArgs)>(capturedArgs)...));
         };
 
         m_queuedLayerActions.emplace_back(std::move(factory));
+    }
+
+    template <std::derived_from<Layer> FromLayer, std::derived_from<Layer> ToLayer, typename... Args>
+    void QueueLayerTransition(Args&&... args)
+    {
+        auto factory = [this, ... capturedArgs = std::forward<Args>(args)]() mutable {
+            auto toLayer = std::make_unique<ToLayer>(std::forward<Args>(capturedArgs)...);
+
+            for (auto& layer : m_layers)
+            {
+                if (!dynamic_cast<FromLayer*>(layer.get()))
+                    continue;
+
+                layer = std::move(toLayer);
+                return;
+            }
+        };
+
+        m_queuedLayerActions.push_back(std::move(factory));
     }
 
 private:
