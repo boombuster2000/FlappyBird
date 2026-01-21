@@ -12,7 +12,7 @@ int main()
     // The game's lifetime covers entire program execution so this is safe.
     engine::core::ServiceLocator::SetApp(&game);
 
-    game.QueuePushLayer<MainMenuLayer>();
+    game.QueueLayerPush<MainMenuLayer>();
     game.Run();
     return 0;
 }
