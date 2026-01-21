@@ -9,7 +9,7 @@ if(WIN32 AND MINGW)
 endif()
 
 set(FETCHCONTENT_BASE_DIR
-        ${CMAKE_SOURCE_DIR}/_deps
+        ${CMAKE_SOURCE_DIR}/.cmake_cache
         CACHE PATH "FetchContent base directory"
 )
 
